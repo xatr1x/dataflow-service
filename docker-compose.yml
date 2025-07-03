@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  service-a:
+    build:
+      context: ./service-a
+      dockerfile: Dockerfile
+    container_name: service-a
+    working_dir: /usr/src/app/service-a
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/service-a/node_modules
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+      - redistimeseries
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/dataflow
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - REDISTIMESERIES_HOST=redistimeseries
+      - REDISTIMESERIES_PORT=6379
+  service-b:
+    build:
+      context: ./service-b
+      dockerfile: Dockerfile
+    container_name: service-b
+    working_dir: /usr/src/app/service-b
+    ports:
+      - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/service-b/node_modules
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+      - redistimeseries
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/dataflow
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - REDISTIMESERIES_HOST=redistimeseries
+      - REDISTIMESERIES_PORT=6379
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  redistimeseries:
+    image: redis/redis-stack-server:latest
+    container_name: redistimeseries
+    ports:
+      - '6380:6379'
+
+volumes:
+  mongo-data:
