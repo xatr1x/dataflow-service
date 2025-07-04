@@ -18,9 +18,9 @@
     "noFallthroughCasesInSwitch": false,
     "baseUrl": "./",
     "paths": {
-      // "@libs/*": ["libs/*"],
       "@libs/mongo": ["libs/mongo/src"],
-      // "@libs/mongo/*": ["libs/mongo/src/*"]
+      "@libs/redis": ["libs/redis/src"],
+      "@libs/rabbitmq": ["libs/rabbitmq/src"],
     },
   }
 }
