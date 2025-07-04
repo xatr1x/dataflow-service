@@ -4,10 +4,8 @@ WORKDIR /usr/src/app/service-a
 
 COPY package*.json ./
 
-RUN npm install -g @nestjs/cli
-
 RUN npm install
 
 COPY . .
 
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/service-a/src/main.js"]
